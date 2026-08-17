@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Conda / virtual environments
+.conda/
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Model weights
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+
+# Scientific datasets / downloaded corpus
+data/raw/*
+data/processed/*
+data/cache/*
+
+# Preserve directory structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/cache/.gitkeep
+
+# Research papers
+*.pdf
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3

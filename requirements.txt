@@ -1,0 +1,13 @@
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+seaborn
+tqdm
+pyyaml
+requests
+python-dotenv
+pydantic
+pytest
+pytest-cov
