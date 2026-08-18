@@ -1,6 +1,6 @@
 import fitz
 
-from .models import ParsedDocument
+from .models import DocumentSection, ParsedDocument
 
 
 class PDFParser:
@@ -14,5 +14,11 @@ class PDFParser:
         return ParsedDocument(
             paper_id=str(path),
             title="",
-            sections=[text],
+            sections=[
+            DocumentSection(
+                heading="Document Text",
+                text=text,
+                level=1,
+                )
+            ],
         )

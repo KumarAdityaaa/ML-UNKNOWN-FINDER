@@ -15,4 +15,4 @@ def test_pdf_parser(tmp_path):
     parsed = PDFParser().parse(pdf_path)
 
     assert parsed.paper_id == str(pdf_path)
-    assert "AI Unknown Finder Test Document" in parsed.sections[0]
+    assert "AI Unknown Finder Test Document" in parsed.sections[0].text
