@@ -4,8 +4,9 @@
 
 ## Project Status
 
-**Phase:** Project bootstrap  
-**Status:** Initial repository setup  
+**Current Phase:** Literature Ingestion  
+**Current Milestone:** Literature Ingestion Foundation  
+**Status:** In active development  
 **Primary branch:** `main`
 
 ## Vision
@@ -59,7 +60,7 @@ Interactive Research Dashboard
 
 | Module | Purpose | Status |
 |---|---|---|
-| Literature ingestion | Collect and register scientific papers | Planned |
+| Literature ingestion | Collect and register scientific papers | **In progress** |
 | Document parsing | Extract structured content from papers | Planned |
 | Scientific extraction | Extract concepts, claims, methods, datasets, results, limitations and evidence | Planned |
 | Knowledge graph | Represent relationships between scientific entities and claims | Planned |
@@ -82,30 +83,35 @@ Interactive Research Dashboard
 
 ## Development Philosophy
 
-This repository is being developed as a collaborative research project. Each implementation stage will include:
+This repository is being developed as a collaborative research project.
+
+Each implementation stage includes:
 
 1. a defined research or engineering objective;
 2. a reproducible implementation;
-3. tests or validation criteria;
+3. automated tests or validation criteria;
 4. documentation updates;
-5. a focused Git commit or pull request.
+5. a focused Git commit;
+6. a pull request reviewed before merging into `main`.
 
-Large dependencies and advanced models will be introduced only when they are required by a validated stage of the pipeline.
+Large dependencies and advanced models will be introduced only when required by a validated stage of the pipeline.
 
 ## Repository Structure
-
-The repository structure will evolve with the implementation. The intended architecture is:
 
 ```text
 ML-UNKNOWN-FINDER/
 ├── configs/                 # Reproducible configuration files
-├── data/                    # Local datasets and derived artifacts (ignored when appropriate)
-├── docs/                    # Architecture, research decisions, experiments and methodology
-├── models/                  # Locally downloaded/model artifacts (ignored when appropriate)
-├── notebooks/              # Exploratory research notebooks
-├── scripts/                # Reproducible utility and pipeline scripts
-├── src/                    # Production Python package
+├── data/                    # Local datasets and derived artifacts
+│   ├── raw/
+│   ├── processed/
+│   ├── metadata/
+│   └── cache/
+├── docs/                    # Architecture, research decisions and experiments
+├── notebooks/               # Exploratory research notebooks
+├── scripts/                 # Reproducible utility and pipeline scripts
+├── src/                     # Production Python package
 │   └── unknown_finder/
+│       ├── config/
 │       ├── ingestion/
 │       ├── parsing/
 │       ├── extraction/
@@ -116,18 +122,96 @@ ML-UNKNOWN-FINDER/
 │       ├── evidence/
 │       ├── novelty/
 │       └── evaluation/
-├── tests/                  # Automated tests
-├── dashboard/              # Interactive research interface
+├── tests/                   # Automated tests
+├── dashboard/               # Interactive research interface
 ├── .gitignore
 ├── CONTRIBUTING.md
 ├── environment.yml
 ├── requirements.txt
+├── pyproject.toml
 └── README.md
 ```
 
 ## Development Environment
 
-The primary development environment will use **Conda with Python 3.11**. Exact package versions will be recorded as the implementation progresses so that collaborators can reproduce the environment.
+The project uses **Conda with Python 3.11**.
+
+Create the environment with:
+
+```bash
+conda env create -f environment.yml
+```
+
+Activate it:
+
+```bash
+conda activate unknown-finder
+```
+
+Run the test suite:
+
+```bash
+pytest
+```
+
+The project is developed incrementally so that dependencies are introduced only when required by implemented components.
+
+## Current Architecture
+
+### Literature Ingestion
+
+The current ingestion architecture normalizes different literature providers into a common `PaperRecord` model.
+
+```text
+OpenAlex ───────┐
+arXiv ──────────┤
+PubMed ─────────┼──→ LiteratureSource
+Semantic Scholar┘            ↓
+                       PaperRecord
+                            ↓
+                     LiteratureService
+                            ↓
+                       Deduplication
+                            ↓
+                    LiteratureCorpus
+                            ↓
+                    Paper Metadata Storage
+```
+
+Implemented components include:
+
+- `PaperRecord` metadata model
+- `LiteratureSource` abstraction
+- OpenAlex adapter
+- arXiv adapter
+- PubMed adapter
+- Semantic Scholar adapter
+- literature service
+- metadata storage
+- corpus service
+- identifier-based deduplication
+- automated tests
+
+## Development Workflow
+
+Development uses feature branches.
+
+```bash
+git checkout main
+git pull
+git checkout -b feature/<feature-name>
+```
+
+After implementation:
+
+```bash
+pytest
+git add .
+git commit -m "feat: description"
+git push -u origin feature/<feature-name>
+```
+
+Each completed feature is submitted as a pull request and merged into `main` after review.
 
 ## Current Milestone
 
@@ -135,58 +219,122 @@ The primary development environment will use **Conda with Python 3.11**. Exact p
 
 - [x] Create GitHub repository
 - [x] Establish project vision and research principles
-- [ ] Add reproducible Conda environment
-- [ ] Add Python package structure
-- [ ] Add testing infrastructure
-- [ ] Add CI validation
-- [ ] Add contribution workflow
+- [x] Add reproducible Conda environment
+- [x] Add Python package structure
+- [x] Add testing infrastructure
+- [x] Add contribution workflow
+
+### Milestone 1 — Literature Ingestion Foundation
+
+- [x] Literature source abstraction
+- [x] OpenAlex adapter
+- [x] arXiv adapter
+- [x] PubMed adapter
+- [x] Semantic Scholar adapter
+- [x] Paper metadata schema
+- [x] Metadata storage
+- [x] Literature service
+- [x] Corpus service
+- [x] Basic deduplication
+- [x] Identifier-based deduplication
+- [x] Automated tests
+
+### Remaining Literature Ingestion Work
+
+- [ ] Robust metadata normalization across sources
+- [ ] Corpus-level source merging
+- [ ] Paper download pipeline
+- [ ] PDF provenance tracking
+- [ ] Rate limiting and retry policies
+- [ ] Persistent corpus registry
+- [ ] Ingestion evaluation dataset
 
 ## Roadmap
 
-### Phase 2 — Literature Ingestion
-
-- [x] Literature source abstraction
-- [x] OpenAlex integration
-- [x] Paper metadata schema
-- [x] Metadata validation
-- [x] Metadata storage
-- [x] Automated ingestion tests
-- [ ] arXiv integration
-- [x] Semantic Scholar integration
-- [x] PubMed integration
-- [ ] Corpus deduplication
-- [ ] Paper download pipeline
-
-
-
-### Phase 3 — Scientific Document Understanding
+### Phase 2 — Scientific Document Understanding
 
 Parse papers and extract structured scientific information.
 
-### Phase 4 — Research Knowledge Graph
+- [ ] PDF parsing
+- [ ] Section detection
+- [ ] Figure and table extraction
+- [ ] Reference extraction
+- [ ] Equation handling
+- [ ] Scientific entity extraction
+- [ ] Claim extraction
+- [ ] Evidence extraction
+- [ ] Limitation extraction
+- [ ] Future-work extraction
+
+### Phase 3 — Research Knowledge Graph
 
 Represent papers, claims, methods, datasets, experiments, metrics and relationships.
 
-### Phase 5 — Discovery Engine
+### Phase 4 — Discovery Engine
 
-Implement contradiction detection, gap detection and underexplored relationship discovery.
+Implement:
 
-### Phase 6 — Hypothesis Engine
+- contradiction detection;
+- research gap detection;
+- unexplored relationship discovery;
+- missing experiment detection.
+
+### Phase 5 — Hypothesis Engine
 
 Generate and rank candidate hypotheses with explicit evidence traces.
 
-### Phase 7 — Evaluation
+### Phase 6 — Evaluation
 
-Build datasets, baselines, human evaluation protocols and ablation studies.
+Build:
 
-### Phase 8 — Research Dashboard
+- evaluation datasets;
+- baselines;
+- human evaluation protocols;
+- ablation studies;
+- reproducibility experiments.
 
-Provide interactive exploration of the research graph and discovery results.
+### Phase 7 — Research Dashboard
+
+Provide interactive exploration of:
+
+- research graphs;
+- contradictions;
+- research gaps;
+- hypotheses;
+- evidence chains;
+- novelty estimates.
 
 ## Important Limitation
 
-The first version will operate on a **defined and documented literature corpus**. Statements such as "this has never been studied" will therefore be avoided unless supported by an explicitly defined search methodology and sufficient coverage evidence.
+The first version will operate on a **defined and documented literature corpus**.
+
+Statements such as:
+
+> "This has never been studied."
+
+will therefore be avoided unless supported by an explicitly defined search methodology and sufficient coverage evidence.
+
+The system should instead use language such as:
+
+> "No relevant work was identified within the defined search corpus and methodology."
+
+## Research Evaluation
+
+The eventual system will be evaluated using measurable criteria rather than demonstration quality alone.
+
+Planned evaluation dimensions include:
+
+- literature retrieval quality;
+- metadata accuracy;
+- extraction precision and recall;
+- knowledge graph quality;
+- contradiction detection accuracy;
+- research-gap precision;
+- hypothesis quality;
+- evidence traceability;
+- novelty-ranking agreement with human evaluators;
+- reproducibility.
 
 ## License
 
-License will be selected during the repository bootstrap phase before external redistribution.
+License will be selected before external redistribution.

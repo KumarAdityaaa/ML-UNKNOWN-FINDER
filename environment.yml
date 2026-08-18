@@ -23,3 +23,5 @@ dependencies:
       - pytest-cov
       - httpx
       - respx
+      - pymupdf
+      
