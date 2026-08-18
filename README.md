@@ -143,7 +143,7 @@ The primary development environment will use **Conda with Python 3.11**. Exact p
 
 ## Roadmap
 
-### Phase 1 — Literature Ingestion
+### Phase 2 — Literature Ingestion
 
 - [x] Literature source abstraction
 - [x] OpenAlex integration
@@ -157,9 +157,7 @@ The primary development environment will use **Conda with Python 3.11**. Exact p
 - [ ] Corpus deduplication
 - [ ] Paper download pipeline
 
-### Phase 2 — Literature Ingestion
 
-Build a source-agnostic paper registry and collectors for selected scholarly APIs.
 
 ### Phase 3 — Scientific Document Understanding
 
