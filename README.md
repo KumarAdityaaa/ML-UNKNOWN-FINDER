@@ -152,7 +152,7 @@ The primary development environment will use **Conda with Python 3.11**. Exact p
 - [x] Metadata storage
 - [x] Automated ingestion tests
 - [ ] arXiv integration
-- [ ] Semantic Scholar integration
+- [x] Semantic Scholar integration
 - [x] PubMed integration
 - [ ] Corpus deduplication
 - [ ] Paper download pipeline
