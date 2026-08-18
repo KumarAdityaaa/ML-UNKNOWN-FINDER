@@ -35,11 +35,10 @@ class OpenAlexSource(LiteratureSource):
                     authors=authors,
                     abstract=None,
                     publication_date=work.get("publication_date"),
-                    venue=(
-                        work.get("primary_location", {})
-                        .get("source", {})
-                        .get("display_name")
-                    ),
+		    venue=(
+    			(work.get("primary_location") or {})
+    			.get("source") or {}
+		    ).get("display_name"),
                     doi=work.get("doi"),
                     openalex_id=work["id"],
                     source="openalex",
