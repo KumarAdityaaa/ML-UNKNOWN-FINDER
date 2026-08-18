@@ -11,3 +11,5 @@ python-dotenv
 pydantic
 pytest
 pytest-cov
+httpx
+respx

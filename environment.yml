@@ -21,3 +21,5 @@ dependencies:
   - pytest
   - pip:
       - pytest-cov
+      - httpx
+      - respx

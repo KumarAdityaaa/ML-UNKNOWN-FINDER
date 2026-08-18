@@ -143,9 +143,19 @@ The primary development environment will use **Conda with Python 3.11**. Exact p
 
 ## Roadmap
 
-### Phase 1 — Foundation
+### Phase 1 — Literature Ingestion
 
-Repository architecture, environment, configuration, logging, testing and CI.
+- [x] Literature source abstraction
+- [x] OpenAlex integration
+- [x] Paper metadata schema
+- [x] Metadata validation
+- [x] Metadata storage
+- [x] Automated ingestion tests
+- [ ] arXiv integration
+- [ ] Semantic Scholar integration
+- [ ] PubMed integration
+- [ ] Corpus deduplication
+- [ ] Paper download pipeline
 
 ### Phase 2 — Literature Ingestion
 
