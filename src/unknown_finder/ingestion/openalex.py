@@ -19,13 +19,36 @@ class OpenAlexSource(LiteratureSource):
 
         response.raise_for_status()
 
-        return [
-            PaperRecord(
-                paper_id=work["id"],
-                title=work["title"],
-                source="openalex",
-                openalex_id=work["id"],
-                doi=work.get("doi"),
+        papers = []
+
+        for work in response.json()["results"]:
+            authors = [
+                author["author"]["display_name"]
+                for author in work.get("authorships", [])
+                if author.get("author")
+            ]
+
+            papers.append(
+                PaperRecord(
+                    paper_id=work["id"],
+                    title=work["title"],
+                    authors=authors,
+                    abstract=None,
+                    publication_date=work.get("publication_date"),
+                    venue=(
+                        work.get("primary_location", {})
+                        .get("source", {})
+                        .get("display_name")
+                    ),
+                    doi=work.get("doi"),
+                    openalex_id=work["id"],
+                    source="openalex",
+                    landing_page=work.get("id"),
+                    pdf_url=(
+                        work.get("primary_location", {})
+                        .get("pdf_url")
+                    ),
+                )
             )
-            for work in response.json()["results"]
-        ]
+
+        return papers
