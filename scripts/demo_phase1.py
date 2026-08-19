@@ -7,7 +7,7 @@ from unknown_finder.ingestion.models import PaperRecord
 from unknown_finder.ingestion.provenance import PDFProvenance
 from unknown_finder.ingestion.registry import CorpusRegistry
 from unknown_finder.parsing.pdf import PDFParser
-
+from unknown_finder.parsing.analysis import analyze_document
 
 PAPER_ID = "1706.03762"
 TITLE = "Attention Is All You Need"
@@ -44,6 +44,7 @@ def main():
 
     parser = PDFParser()
     parsed = parser.parse(pdf_path)
+    analysis = analyze_document(parsed)
 
     document = pymupdf.open(pdf_path)
     page_count = len(document)
@@ -90,7 +91,13 @@ def main():
             f"{section.heading}: "
             f"{len(section.text):,} characters"
         )
-
+    print("\n      Paper Analysis:")
+    print(f"        Title: {analysis.title}")
+    print(f"        Abstract length: {analysis.abstract_length:,} characters")
+    print(f"        Sections: {analysis.section_count}")
+    print(f"        References: {analysis.reference_count}")
+    print(f"        Citation occurrences: {analysis.citation_count}")
+    print(f"        Cited references: {len(analysis.cited_reference_ids)}")
     # 3. Create paper metadata.
     print("\n[3/5] Creating paper record...")
 
