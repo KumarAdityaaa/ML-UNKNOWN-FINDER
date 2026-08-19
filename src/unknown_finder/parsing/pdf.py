@@ -4,6 +4,7 @@ from .metadata import extract_metadata
 from .models import ParsedDocument
 from .references import extract_references
 from .sections import detect_sections
+from .citations import extract_citations
 
 
 class PDFParser:
@@ -19,6 +20,7 @@ class PDFParser:
 
         metadata = extract_metadata(text)
         references = extract_references(text)
+        citations = extract_citations(text)
 
         return ParsedDocument(
             paper_id=str(path),
@@ -26,4 +28,5 @@ class PDFParser:
             abstract=metadata["abstract"] or None,
             sections=detect_sections(text),
             references=references,
+            citations=citations,
         )
