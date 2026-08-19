@@ -1,4 +1,6 @@
 import pymupdf
+
+from .metadata import extract_metadata
 from .models import ParsedDocument
 from .sections import detect_sections
 
@@ -7,12 +9,18 @@ class PDFParser:
     def parse(self, path: str) -> ParsedDocument:
         document = pymupdf.open(path)
 
-        text = "\n".join(page.get_text() for page in document)
+        text = "\n".join(
+            page.get_text()
+            for page in document
+        )
 
         document.close()
 
+        metadata = extract_metadata(text)
+
         return ParsedDocument(
             paper_id=str(path),
-            title="",
+            title=metadata["title"],
+            abstract=metadata["abstract"] or None,
             sections=detect_sections(text),
         )

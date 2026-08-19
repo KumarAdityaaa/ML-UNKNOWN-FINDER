@@ -58,6 +58,14 @@ def main():
     print(f"      Sections: {len(parsed.sections)}")
     print(f"      Extracted text: {len(text):,} characters")
 
+    print(f"      Parsed title: {parsed.title}")
+
+    if parsed.abstract:
+        abstract_preview = parsed.abstract[:300].replace("\n", " ")
+        print(f"      Abstract preview: {abstract_preview}...")
+
+    print(f"      Metadata extraction: {'PASS' if parsed.title and parsed.abstract else 'FAIL'}")
+
     for section in parsed.sections:
         print(
             f"        - [L{section.level}] "
