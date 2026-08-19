@@ -2,6 +2,7 @@ import pymupdf
 
 from .metadata import extract_metadata
 from .models import ParsedDocument
+from .references import extract_references
 from .sections import detect_sections
 
 
@@ -17,10 +18,12 @@ class PDFParser:
         document.close()
 
         metadata = extract_metadata(text)
+        references = extract_references(text)
 
         return ParsedDocument(
             paper_id=str(path),
             title=metadata["title"],
             abstract=metadata["abstract"] or None,
             sections=detect_sections(text),
+            references=references,
         )

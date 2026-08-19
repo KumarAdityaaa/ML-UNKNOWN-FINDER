@@ -57,7 +57,16 @@ def main():
     print(f"      Pages: {page_count}")
     print(f"      Sections: {len(parsed.sections)}")
     print(f"      Extracted text: {len(text):,} characters")
+    print(f"      References: {len(parsed.references)}")
 
+    if parsed.references:
+        print("      First 3 references:")
+
+        for reference in parsed.references[:3]:
+            print(
+                f"        [{reference.reference_id}] "
+                f"{reference.text[:180]}"
+            )
     print(f"      Parsed title: {parsed.title}")
 
     if parsed.abstract:
