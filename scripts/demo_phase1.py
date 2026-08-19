@@ -58,7 +58,7 @@ def main():
     print(f"      Sections: {len(parsed.sections)}")
     print(f"      Extracted text: {len(text):,} characters")
     print(f"      References: {len(parsed.references)}")
-    print(f"      Citations: {len(parsed.citations)}")
+    print(f"      Validated citations: {len(parsed.citations)}")
 
     if parsed.citations:
         print("      First 3 citations:")

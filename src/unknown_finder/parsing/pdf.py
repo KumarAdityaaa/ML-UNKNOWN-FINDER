@@ -1,10 +1,11 @@
 import pymupdf
 
+from .citations import extract_citations
+from .citation_validation import validate_citations
 from .metadata import extract_metadata
 from .models import ParsedDocument
 from .references import extract_references
 from .sections import detect_sections
-from .citations import extract_citations
 
 
 class PDFParser:
@@ -21,6 +22,11 @@ class PDFParser:
         metadata = extract_metadata(text)
         references = extract_references(text)
         citations = extract_citations(text)
+
+        citations = validate_citations(
+            citations,
+            references,
+        )
 
         return ParsedDocument(
             paper_id=str(path),
