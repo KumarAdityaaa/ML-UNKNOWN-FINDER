@@ -1,11 +1,11 @@
-import fitz
-
-from .models import DocumentSection, ParsedDocument
+import pymupdf
+from .models import ParsedDocument
+from .sections import detect_sections
 
 
 class PDFParser:
     def parse(self, path: str) -> ParsedDocument:
-        document = fitz.open(path)
+        document = pymupdf.open(path)
 
         text = "\n".join(page.get_text() for page in document)
 
@@ -14,11 +14,5 @@ class PDFParser:
         return ParsedDocument(
             paper_id=str(path),
             title="",
-            sections=[
-            DocumentSection(
-                heading="Document Text",
-                text=text,
-                level=1,
-                )
-            ],
+            sections=detect_sections(text),
         )

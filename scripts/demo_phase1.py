@@ -27,7 +27,7 @@ def main():
 
     print(f"\nTitle: {TITLE}")
     print(f"Paper ID: {PAPER_ID}")
-    print(f"Source: arXiv")
+    print("Source: arXiv")
     print(f"URL: {SOURCE_URL}")
 
     # 1. Download the real paper.
@@ -39,20 +39,31 @@ def main():
     print(f"      PDF: {pdf_path}")
     print(f"      Size: {pdf_path.stat().st_size:,} bytes")
 
-    # 2. Open and inspect the real PDF.
+    # 2. Parse and inspect the real PDF.
     print("\n[2/5] Inspecting PDF...")
 
     parser = PDFParser()
     parsed = parser.parse(pdf_path)
 
-    page_count = len(pymupdf.open(pdf_path))
-    text = "\n".join(section.text for section in parsed.sections)
+    document = pymupdf.open(pdf_path)
+    page_count = len(document)
+    document.close()
+
+    text = "\n".join(
+        section.text
+        for section in parsed.sections
+    )
 
     print(f"      Pages: {page_count}")
     print(f"      Sections: {len(parsed.sections)}")
+    print(f"      Extracted text: {len(text):,} characters")
 
     for section in parsed.sections:
-    	print(f"        - {section.heading}: {len(section.text):,} characters")
+        print(
+            f"        - [L{section.level}] "
+            f"{section.heading}: "
+            f"{len(section.text):,} characters"
+        )
 
     # 3. Create paper metadata.
     print("\n[3/5] Creating paper record...")
@@ -89,7 +100,7 @@ def main():
     print(f"      Registered papers: {len(registered)}")
 
     print("\n" + "=" * 60)
-    print("PHASE 1 REAL-PAPER DEMO: PASS")
+    print("PHASE 2 SECTION DETECTION DEMO: PASS")
     print("=" * 60)
 
 
