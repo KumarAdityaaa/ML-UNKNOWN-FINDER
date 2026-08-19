@@ -58,7 +58,16 @@ def main():
     print(f"      Sections: {len(parsed.sections)}")
     print(f"      Extracted text: {len(text):,} characters")
     print(f"      References: {len(parsed.references)}")
+    print(f"      Citations: {len(parsed.citations)}")
 
+    if parsed.citations:
+        print("      First 3 citations:")
+
+        for citation in parsed.citations[:3]:
+            print(
+                f"        [{citation.reference_id}] "
+                f"{citation.context[:180]}"
+            )
     if parsed.references:
         print("      First 3 references:")
 

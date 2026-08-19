@@ -12,9 +12,15 @@ class Reference(BaseModel):
     text: str
 
 
+class Citation(BaseModel):
+    reference_id: str
+    context: str
+
+
 class ParsedDocument(BaseModel):
     paper_id: str
     title: str
     abstract: str | None = None
     sections: list[DocumentSection] = Field(default_factory=list)
     references: list[Reference] = Field(default_factory=list)
+    citations: list[Citation] = Field(default_factory=list)
