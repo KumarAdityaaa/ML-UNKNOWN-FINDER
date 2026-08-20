@@ -15,6 +15,7 @@ from unknown_finder.parsing.reference_impact import (
     calculate_reference_impact,
 )
 from unknown_finder.extraction.concepts import extract_concepts
+from unknown_finder.extraction.novelty import score_novelty
 
 PAPER_ID = "1706.03762"
 TITLE = "Attention Is All You Need"
@@ -64,6 +65,19 @@ def main():
         parsed.sections,
         min_frequency=3,
     )
+    novelty_results = score_novelty(concepts)
+
+    print()
+    print("      Novelty Scoring:")
+    print(f"        Concepts scored: {len(novelty_results)}")
+    print("        Top 10 novelty candidates:")
+
+    for result in novelty_results[:10]:
+        print(
+            f"          {result.term}: "
+            f"score={result.novelty_score:.4f}, "
+            f"{result.reason}"
+        )    
 
     document = pymupdf.open(pdf_path)
     page_count = len(document)

@@ -124,3 +124,46 @@ def test_common_words_are_filtered():
     assert "paper" not in terms
     assert "arxiv" not in terms
     assert "attention" in terms
+
+def test_repeated_word_phrases_are_filtered():
+    sections = [
+        DocumentSection(
+            heading="Methods",
+            text=(
+                "sequence learning improves modeling. "
+                "sequence learning is useful."
+            ),
+        ),
+    ]
+
+    concepts = extract_concepts(
+        sections,
+        min_frequency=2,
+    )
+
+    terms = {concept.term for concept in concepts}
+
+    assert "sequence learning" in terms
+    assert "sequence sequence" not in terms
+    assert "sequence sequence learning" not in terms
+
+def test_grammatical_fragments_are_filtered():
+    sections = [
+        DocumentSection(
+            heading="Introduction",
+            text=(
+                "advances neural information are discussed. "
+                "attention mechanisms improve sequence modeling."
+            ),
+        ),
+    ]
+
+    concepts = extract_concepts(
+        sections,
+        min_frequency=1,
+    )
+
+    terms = {concept.term for concept in concepts}
+
+    assert "advances neural" not in terms
+    assert "advances neural information" not in terms
