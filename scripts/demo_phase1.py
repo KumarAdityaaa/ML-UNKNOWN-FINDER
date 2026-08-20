@@ -8,6 +8,9 @@ from unknown_finder.ingestion.provenance import PDFProvenance
 from unknown_finder.ingestion.registry import CorpusRegistry
 from unknown_finder.parsing.pdf import PDFParser
 from unknown_finder.parsing.analysis import analyze_document
+from unknown_finder.parsing.citation_stats import (
+    calculate_citation_statistics,
+)
 
 PAPER_ID = "1706.03762"
 TITLE = "Attention Is All You Need"
@@ -45,6 +48,10 @@ def main():
     parser = PDFParser()
     parsed = parser.parse(pdf_path)
     analysis = analyze_document(parsed)
+    citation_stats = calculate_citation_statistics(
+        parsed.citations,
+        parsed.references,
+    )
 
     document = pymupdf.open(pdf_path)
     page_count = len(document)
@@ -100,6 +107,19 @@ def main():
     print(f"        Cited references: {len(analysis.cited_reference_ids)}")
     # 3. Create paper metadata.
     print("\n[3/5] Creating paper record...")
+    print("\n      Citation Statistics:")
+    print(f"        Total citations: {citation_stats.total_citations}")
+    print(f"        Unique cited references: {citation_stats.unique_citations}")
+
+    print("        Top 5 cited references:")
+
+    for reference_id, count in citation_stats.most_cited[:5]:
+        print(f"          [{reference_id}] {count} citations")
+
+    print(
+        f"        Uncited references: "
+        f"{len(citation_stats.uncited_references)}"
+    )
 
     paper = PaperRecord(
         paper_id=PAPER_ID,
