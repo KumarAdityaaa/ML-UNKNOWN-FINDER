@@ -11,6 +11,9 @@ from unknown_finder.parsing.analysis import analyze_document
 from unknown_finder.parsing.citation_stats import (
     calculate_citation_statistics,
 )
+from unknown_finder.parsing.reference_impact import (
+    calculate_reference_impact,
+)
 
 PAPER_ID = "1706.03762"
 TITLE = "Attention Is All You Need"
@@ -50,6 +53,10 @@ def main():
     analysis = analyze_document(parsed)
     citation_stats = calculate_citation_statistics(
         parsed.citations,
+        parsed.references,
+    )
+    reference_impacts = calculate_reference_impact(
+        citation_stats,
         parsed.references,
     )
 
@@ -120,6 +127,23 @@ def main():
         f"        Uncited references: "
         f"{len(citation_stats.uncited_references)}"
     )
+    print("\n      Reference Impact:")
+
+    top_impacts = sorted(
+        reference_impacts,
+        key=lambda impact: (
+            -impact.impact_score,
+            int(impact.reference_id),
+        ),
+    )
+
+    for impact in top_impacts[:5]:
+        print(
+            f"        [{impact.reference_id}] "
+            f"citations={impact.citation_count}, "
+            f"score={impact.impact_score:.4f}, "
+            f"rank={impact.rank}"
+        )
 
     paper = PaperRecord(
         paper_id=PAPER_ID,
