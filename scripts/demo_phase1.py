@@ -14,6 +14,7 @@ from unknown_finder.parsing.citation_stats import (
 from unknown_finder.parsing.reference_impact import (
     calculate_reference_impact,
 )
+from unknown_finder.extraction.concepts import extract_concepts
 
 PAPER_ID = "1706.03762"
 TITLE = "Attention Is All You Need"
@@ -58,6 +59,10 @@ def main():
     reference_impacts = calculate_reference_impact(
         citation_stats,
         parsed.references,
+    )
+    concepts = extract_concepts(
+        parsed.sections,
+        min_frequency=3,
     )
 
     document = pymupdf.open(pdf_path)
@@ -143,6 +148,17 @@ def main():
             f"citations={impact.citation_count}, "
             f"score={impact.impact_score:.4f}, "
             f"rank={impact.rank}"
+        )
+    print("\n      Concept Extraction:")
+
+    print(f"        Concepts found: {len(concepts)}")
+    print("        Top 10 concepts:")
+
+    for concept in concepts[:10]:
+        print(
+            f"          {concept.term}: "
+            f"{concept.frequency} occurrences, "
+            f"{len(concept.sections)} sections"
         )
 
     paper = PaperRecord(
