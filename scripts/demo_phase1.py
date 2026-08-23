@@ -179,6 +179,7 @@ def main():
         paper_id=PAPER_ID,
         title=TITLE,
         source="arxiv",
+        novelty_results=novelty_results,
     )
 
     print(f"      PaperRecord: {paper.paper_id}")
