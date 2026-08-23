@@ -1,5 +1,8 @@
 from datetime import date
+
 from pydantic import BaseModel, Field
+
+from unknown_finder.extraction.novelty import NoveltyResult
 
 
 class PaperRecord(BaseModel):
@@ -16,3 +19,7 @@ class PaperRecord(BaseModel):
     source: str
     landing_page: str | None = None
     pdf_url: str | None = None
+
+    novelty_results: list[NoveltyResult] = Field(
+        default_factory=list,
+    )
