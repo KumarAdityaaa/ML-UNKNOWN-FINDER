@@ -175,10 +175,28 @@ def main():
             f"{len(concept.sections)} sections"
         )
 
-    paper = PaperRecord(
+        paper = PaperRecord(
         paper_id=PAPER_ID,
         title=TITLE,
         source="arxiv",
+        concepts=[
+            {
+                "term": concept.term,
+                "frequency": concept.frequency,
+                "sections": concept.sections,
+                "contexts": concept.contexts,
+                "score": concept.score,
+            }
+            for concept in concepts
+        ],
+        novelty_results=[
+            {
+                "term": result.term,
+                "novelty_score": result.novelty_score,
+                "reason": result.reason,
+            }
+            for result in novelty_results
+        ],
     )
 
     print(f"      PaperRecord: {paper.paper_id}")

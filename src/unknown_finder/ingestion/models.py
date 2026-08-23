@@ -16,3 +16,5 @@ class PaperRecord(BaseModel):
     source: str
     landing_page: str | None = None
     pdf_url: str | None = None
+    concepts: list[dict] = Field(default_factory=list)
+    novelty_results: list[dict] = Field(default_factory=list)
