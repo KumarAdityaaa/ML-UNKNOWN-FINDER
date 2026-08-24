@@ -108,3 +108,37 @@ def test_rank_unknowns_keeps_source_paper():
     assert ranked[0].term == "adaptive attention"
     assert ranked[0].paper_id == "paper-123"
     assert ranked[0].paper_title == "Attention Research"
+
+def test_rank_unknowns_tracks_multiple_source_papers():
+    papers = [
+        PaperRecord(
+            paper_id="paper-001",
+            title="Paper One",
+            source="test",
+            novelty_results=[
+                NoveltyResult(
+                    term="adaptive attention",
+                    novelty_score=0.80,
+                    reason="rare and specific technical concept",
+                ),
+            ],
+        ),
+        PaperRecord(
+            paper_id="paper-002",
+            title="Paper Two",
+            source="test",
+            novelty_results=[
+                NoveltyResult(
+                    term="adaptive attention",
+                    novelty_score=0.90,
+                    reason="rare and specific technical concept",
+                ),
+            ],
+        ),
+    ]
+
+    ranked = rank_unknowns(papers)
+
+    assert ranked[0].term == "adaptive attention"
+    assert ranked[0].novelty_score == 0.90
+    assert ranked[0].paper_id == "paper-002"
