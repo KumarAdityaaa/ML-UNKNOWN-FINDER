@@ -4,6 +4,7 @@ from unknown_finder.knowledge_graph.models import KnowledgeGraph
 from unknown_finder.knowledge_graph.relationships import (
     link_claims_to_concepts,
 )
+from unknown_finder.contradiction.detector import detect_contradictions
 
 
 def build_knowledge_graph(
@@ -51,4 +52,9 @@ def build_knowledge_graph(
             concept_term,
         )
 
+    contradictions = detect_contradictions(claims)
+
+    for contradiction in contradictions:
+        graph.add_contradiction(contradiction)
+        
     return graph

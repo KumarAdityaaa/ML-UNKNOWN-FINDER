@@ -1,6 +1,7 @@
 from unknown_finder.evidence.models import Claim, Evidence
 from unknown_finder.knowledge_graph.builder import build_knowledge_graph
 from unknown_finder.extraction.concepts import Concept
+from unknown_finder.contradiction.models import Contradiction
 
 def test_build_knowledge_graph_from_claims_and_evidence():
     claims = [
@@ -93,3 +94,61 @@ def test_build_knowledge_graph_links_claims_to_concepts():
     assert graph.get_concepts_for_claim("claim-001") == [
         concepts[0]
     ]
+
+def test_build_knowledge_graph_adds_contradictions():
+    claims = [
+        Claim(
+            claim_id="claim-001",
+            text="The proposed method improves accuracy.",
+            paper_id="paper-001",
+            section="Results",
+        ),
+        Claim(
+            claim_id="claim-002",
+            text="The proposed method does not improve accuracy.",
+            paper_id="paper-002",
+            section="Results",
+        ),
+    ]
+
+    graph = build_knowledge_graph(
+        claims=claims,
+        evidence=[],
+        concepts=[],
+    )
+
+    contradictions = graph.get_contradictions_for_claim("claim-001")
+
+    assert len(contradictions) == 1
+
+    contradiction = contradictions[0]
+
+    assert contradiction.claim_a == "claim-001"
+    assert contradiction.claim_b == "claim-002"
+    assert contradiction.paper_a == "paper-001"
+    assert contradiction.paper_b == "paper-002"
+
+def test_build_knowledge_graph_ignores_non_contradictory_claims():
+    claims = [
+        Claim(
+            claim_id="claim-001",
+            text="The proposed method improves accuracy.",
+            paper_id="paper-001",
+            section="Results",
+        ),
+        Claim(
+            claim_id="claim-002",
+            text="The proposed method improves efficiency.",
+            paper_id="paper-002",
+            section="Results",
+        ),
+    ]
+
+    graph = build_knowledge_graph(
+        claims=claims,
+        evidence=[],
+        concepts=[],
+    )
+
+    assert graph.get_contradictions_for_claim("claim-001") == []
+    assert graph.get_contradictions_for_claim("claim-002") == []
