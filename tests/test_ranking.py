@@ -146,3 +146,58 @@ def test_rank_unknowns_tracks_multiple_source_papers():
     "paper-001",
     "paper-002",
 ]
+
+def test_rank_unknowns_tie_breaks_by_term():
+    papers = [
+        PaperRecord(
+            paper_id="paper-001",
+            title="Paper One",
+            source="test",
+            novelty_results=[
+                NoveltyResult(
+                    term="zeta concept",
+                    novelty_score=0.80,
+                    reason="rare",
+                ),
+                NoveltyResult(
+                    term="alpha concept",
+                    novelty_score=0.80,
+                    reason="rare",
+                ),
+            ],
+        ),
+    ]
+
+    ranked = rank_unknowns(papers)
+
+    assert [result.term for result in ranked] == [
+        "alpha concept",
+        "zeta concept",
+    ]
+
+
+def test_rank_unknowns_prefers_higher_score():
+    papers = [
+        PaperRecord(
+            paper_id="paper-001",
+            title="Paper One",
+            source="test",
+            novelty_results=[
+                NoveltyResult(
+                    term="generic method",
+                    novelty_score=0.20,
+                    reason="common",
+                ),
+                NoveltyResult(
+                    term="specific mechanism",
+                    novelty_score=0.95,
+                    reason="rare and specific",
+                ),
+            ],
+        ),
+    ]
+
+    ranked = rank_unknowns(papers)
+
+    assert ranked[0].term == "specific mechanism"
+    assert ranked[0].novelty_score == 0.95
