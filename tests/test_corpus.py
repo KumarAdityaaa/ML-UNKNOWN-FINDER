@@ -80,3 +80,28 @@ def test_corpus_rank_unknowns():
         "sparse routing",
         "common method",
     ]
+
+def test_corpus_unknown_report():
+    storage = FakeStorage()
+    storage.saved = [
+        PaperRecord(
+            paper_id="paper-001",
+            title="Paper One",
+            source="test",
+            novelty_results=[
+                NoveltyResult(
+                    term="adaptive attention",
+                    novelty_score=0.90,
+                    reason="rare",
+                ),
+            ],
+        ),
+    ]
+
+    corpus = LiteratureCorpus(FakeService(), storage)
+
+    report = corpus.unknown_report()
+
+    assert "Unknown Concepts" in report
+    assert "adaptive attention" in report
+    assert "Paper One" in report
