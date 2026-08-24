@@ -80,3 +80,18 @@ def test_knowledge_graph_returns_empty_for_unknown_claim():
     graph = KnowledgeGraph()
 
     assert graph.get_evidence_for_claim("missing-claim") == []
+
+def test_knowledge_graph_tracks_papers_for_claims():
+    graph = KnowledgeGraph()
+
+    claim = Claim(
+        claim_id="claim-001",
+        text="The proposed method improves accuracy.",
+        paper_id="paper-001",
+        section="Results",
+    )
+
+    graph.add_claim(claim)
+
+    assert graph.get_claims_for_paper("paper-001") == [claim]
+    assert graph.get_claims_for_paper("missing-paper") == []

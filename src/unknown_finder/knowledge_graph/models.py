@@ -27,3 +27,13 @@ class KnowledgeGraph:
             for evidence in self.evidence.values()
             if evidence.claim_id == claim_id
         ]
+
+    def get_claims_for_paper(
+        self,
+        paper_id: str,
+    ) -> list[Claim]:
+        return [
+            claim
+            for claim in self.claims.values()
+            if claim.paper_id == paper_id
+        ]
