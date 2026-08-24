@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from unknown_finder.extraction.novelty import NoveltyResult
 from unknown_finder.ingestion.models import PaperRecord
 
 
@@ -23,20 +22,26 @@ def rank_unknowns(
         for result in paper.novelty_results:
             existing = best_results.get(result.term)
 
-            ranked = RankedUnknown(
-            term=result.term,
-            novelty_score=result.novelty_score,
-            reason=result.reason,
-            paper_id=paper.paper_id,
-            paper_title=paper.title,
-            source_paper_ids=[paper.paper_id],
-        )
+            if existing is None:
+                best_results[result.term] = RankedUnknown(
+                    term=result.term,
+                    novelty_score=result.novelty_score,
+                    reason=result.reason,
+                    paper_id=paper.paper_id,
+                    paper_title=paper.title,
+                    source_paper_ids=[paper.paper_id],
+                )
+                continue
 
-            if (
-                existing is None
-                or ranked.novelty_score > existing.novelty_score
-            ):
-                best_results[result.term] = ranked
+            if paper.paper_id not in existing.source_paper_ids:
+                existing.source_paper_ids.append(paper.paper_id)
+
+            if result.novelty_score > existing.novelty_score:
+                existing.term = result.term
+                existing.novelty_score = result.novelty_score
+                existing.reason = result.reason
+                existing.paper_id = paper.paper_id
+                existing.paper_title = paper.title
 
     results = list(best_results.values())
 

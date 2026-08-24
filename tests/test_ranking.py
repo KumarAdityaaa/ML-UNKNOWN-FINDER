@@ -142,3 +142,7 @@ def test_rank_unknowns_tracks_multiple_source_papers():
     assert ranked[0].term == "adaptive attention"
     assert ranked[0].novelty_score == 0.90
     assert ranked[0].paper_id == "paper-002"
+    assert ranked[0].source_paper_ids == [
+    "paper-001",
+    "paper-002",
+]
