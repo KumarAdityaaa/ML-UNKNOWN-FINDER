@@ -1,6 +1,6 @@
 from unknown_finder.evidence.models import Claim, Evidence
 from unknown_finder.knowledge_graph.builder import build_knowledge_graph
-
+from unknown_finder.extraction.concepts import Concept
 
 def test_build_knowledge_graph_from_claims_and_evidence():
     claims = [
@@ -43,3 +43,23 @@ def test_build_knowledge_graph_rejects_orphan_evidence():
 
     with pytest.raises(ValueError, match="unknown claim"):
         build_knowledge_graph([], evidence)
+
+def test_build_knowledge_graph_from_concepts():
+    concepts = [
+        Concept(
+            term="self attention",
+            frequency=3,
+            sections=["Introduction", "Methods"],
+            contexts=["self attention improves sequence modeling."],
+            score=5.25,
+        ),
+    ]
+
+    graph = build_knowledge_graph(
+        claims=[],
+        evidence=[],
+        concepts=concepts,
+    )
+
+    assert graph.concepts["self attention"] == concepts[0]
+    assert graph.get_concepts_for_section("Methods") == [concepts[0]]

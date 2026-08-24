@@ -1,10 +1,11 @@
 from unknown_finder.evidence.models import Claim, Evidence
-
+from unknown_finder.extraction.concepts import Concept
 
 class KnowledgeGraph:
     def __init__(self):
         self.claims: dict[str, Claim] = {}
         self.evidence: dict[str, Evidence] = {}
+        self.concepts: dict[str, Concept] = {}
 
     def add_claim(self, claim: Claim) -> None:
         self.claims[claim.claim_id] = claim
@@ -36,4 +37,17 @@ class KnowledgeGraph:
             claim
             for claim in self.claims.values()
             if claim.paper_id == paper_id
+        ]
+
+    def add_concept(self, concept: Concept) -> None:
+        self.concepts[concept.term] = concept
+
+    def get_concepts_for_section(
+        self,
+        section: str,
+    ) -> list[Concept]:
+        return [
+            concept
+            for concept in self.concepts.values()
+            if section in concept.sections
         ]

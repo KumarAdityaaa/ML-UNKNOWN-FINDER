@@ -1,6 +1,6 @@
 from unknown_finder.evidence.models import Claim, Evidence
 from unknown_finder.knowledge_graph.models import KnowledgeGraph
-
+from unknown_finder.extraction.concepts import Concept
 
 def test_knowledge_graph_adds_claim_and_evidence():
     graph = KnowledgeGraph()
@@ -95,3 +95,21 @@ def test_knowledge_graph_tracks_papers_for_claims():
 
     assert graph.get_claims_for_paper("paper-001") == [claim]
     assert graph.get_claims_for_paper("missing-paper") == []
+
+def test_knowledge_graph_tracks_concepts():
+    graph = KnowledgeGraph()
+
+    concept = Concept(
+        term="self attention",
+        frequency=3,
+        sections=["Introduction", "Methods"],
+        contexts=["self attention improves sequence modeling."],
+        score=5.25,
+    )
+
+    graph.add_concept(concept)
+
+    assert graph.concepts["self attention"] == concept
+    assert graph.get_concepts_for_section("Introduction") == [concept]
+    assert graph.get_concepts_for_section("Methods") == [concept]
+    assert graph.get_concepts_for_section("Results") == []
