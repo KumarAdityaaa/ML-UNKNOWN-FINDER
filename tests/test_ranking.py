@@ -83,6 +83,28 @@ def test_rank_unknowns_deduplicates_terms():
         "sparse routing",
     ]
     assert ranked[0].novelty_score == 0.90
+    assert ranked[0].paper_id == "paper-002"
+    assert ranked[0].paper_title == "Paper Two"
 
 def test_rank_unknowns_returns_empty_list_for_empty_corpus():
     assert rank_unknowns([]) == []
+
+def test_rank_unknowns_keeps_source_paper():
+    paper = PaperRecord(
+        paper_id="paper-123",
+        title="Attention Research",
+        source="test",
+        novelty_results=[
+            NoveltyResult(
+                term="adaptive attention",
+                novelty_score=0.91,
+                reason="rare and specific technical concept",
+            ),
+        ],
+    )
+
+    ranked = rank_unknowns([paper])
+
+    assert ranked[0].term == "adaptive attention"
+    assert ranked[0].paper_id == "paper-123"
+    assert ranked[0].paper_title == "Attention Research"
