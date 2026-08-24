@@ -16,6 +16,8 @@ from unknown_finder.parsing.reference_impact import (
 )
 from unknown_finder.extraction.concepts import extract_concepts
 from unknown_finder.extraction.novelty import score_novelty
+from unknown_finder.novelty.ranking import rank_unknowns
+from unknown_finder.novelty.report import format_unknown_report
 
 PAPER_ID = "1706.03762"
 TITLE = "Attention Is All You Need"
@@ -206,6 +208,13 @@ def main():
 
     print(f"      Registry: {REGISTRY_PATH}")
     print(f"      Registered papers: {len(registered)}")
+    print("\n      Unknown Concepts Report:")
+
+    ranked_unknowns = rank_unknowns(registered)
+    report = format_unknown_report(ranked_unknowns, limit=10)
+
+    for line in report.splitlines():
+        print(f"        {line}")
 
     print("\n" + "=" * 60)
     print("PHASE 2 SECTION DETECTION DEMO: PASS")
