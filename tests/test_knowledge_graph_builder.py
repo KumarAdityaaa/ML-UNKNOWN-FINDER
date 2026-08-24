@@ -63,3 +63,33 @@ def test_build_knowledge_graph_from_concepts():
 
     assert graph.concepts["self attention"] == concepts[0]
     assert graph.get_concepts_for_section("Methods") == [concepts[0]]
+
+def test_build_knowledge_graph_links_claims_to_concepts():
+    claims = [
+        Claim(
+            claim_id="claim-001",
+            text="Self attention improves sequence modeling.",
+            paper_id="paper-001",
+            section="Results",
+        ),
+    ]
+
+    concepts = [
+        Concept(
+            term="self attention",
+            frequency=3,
+            sections=["Results"],
+            contexts=["Self attention improves sequence modeling."],
+            score=5.2,
+        ),
+    ]
+
+    graph = build_knowledge_graph(
+        claims=claims,
+        evidence=[],
+        concepts=concepts,
+    )
+
+    assert graph.get_concepts_for_claim("claim-001") == [
+        concepts[0]
+    ]

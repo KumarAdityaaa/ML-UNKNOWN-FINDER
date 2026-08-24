@@ -6,6 +6,7 @@ class KnowledgeGraph:
         self.claims: dict[str, Claim] = {}
         self.evidence: dict[str, Evidence] = {}
         self.concepts: dict[str, Concept] = {}
+        self.claim_concepts: dict[str, list[str]] = {}
 
     def add_claim(self, claim: Claim) -> None:
         self.claims[claim.claim_id] = claim
@@ -50,4 +51,36 @@ class KnowledgeGraph:
             concept
             for concept in self.concepts.values()
             if section in concept.sections
+        ]
+
+    def link_claim_to_concept(
+        self,
+        claim_id: str,
+        concept_term: str,
+    ) -> None:
+        if claim_id not in self.claims:
+            raise ValueError(
+                f"Unknown claim {claim_id!r}"
+            )
+
+        if concept_term not in self.concepts:
+            raise ValueError(
+                f"Unknown concept {concept_term!r}"
+            )
+
+        self.claim_concepts.setdefault(
+            claim_id,
+            [],
+        )
+
+        if concept_term not in self.claim_concepts[claim_id]:
+            self.claim_concepts[claim_id].append(concept_term)
+
+    def get_concepts_for_claim(
+        self,
+        claim_id: str,
+    ) -> list[Concept]:
+        return [
+            self.concepts[term]
+            for term in self.claim_concepts.get(claim_id, [])
         ]

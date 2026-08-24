@@ -113,3 +113,27 @@ def test_knowledge_graph_tracks_concepts():
     assert graph.get_concepts_for_section("Introduction") == [concept]
     assert graph.get_concepts_for_section("Methods") == [concept]
     assert graph.get_concepts_for_section("Results") == []
+
+def test_knowledge_graph_tracks_claim_concept_relationships():
+    graph = KnowledgeGraph()
+
+    claim = Claim(
+        claim_id="claim-001",
+        text="Self attention improves sequence modeling.",
+        paper_id="paper-001",
+        section="Results",
+    )
+
+    concept = Concept(
+        term="self attention",
+        frequency=3,
+        sections=["Results"],
+        contexts=["Self attention improves sequence modeling."],
+        score=5.2,
+    )
+
+    graph.add_claim(claim)
+    graph.add_concept(concept)
+    graph.link_claim_to_concept(claim.claim_id, concept.term)
+
+    assert graph.get_concepts_for_claim("claim-001") == [concept]
