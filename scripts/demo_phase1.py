@@ -175,7 +175,7 @@ def main():
             f"{len(concept.sections)} sections"
         )
 
-    paper = PaperRecord(
+        paper = PaperRecord(
         paper_id=PAPER_ID,
         title=TITLE,
         source="arxiv",
@@ -206,9 +206,14 @@ def main():
 
     print(f"      Registry: {REGISTRY_PATH}")
     print(f"      Registered papers: {len(registered)}")
+    if registered:
+        print(
+            f"      Stored novelty results: "
+            f"{len(registered[0].novelty_results)}"
+        )
 
     print("\n" + "=" * 60)
-    print("PHASE 2 SECTION DETECTION DEMO: PASS")
+    print("NOVELTY PERSISTENCE DEMO: PASS")
     print("=" * 60)
 
 
