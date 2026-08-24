@@ -1,6 +1,7 @@
 from unknown_finder.evidence.models import Claim, Evidence
 from unknown_finder.knowledge_graph.models import KnowledgeGraph
 from unknown_finder.extraction.concepts import Concept
+from unknown_finder.knowledge_graph.builder import build_knowledge_graph
 
 def test_knowledge_graph_adds_claim_and_evidence():
     graph = KnowledgeGraph()
@@ -188,3 +189,45 @@ def test_knowledge_graph_returns_empty_trace_for_unknown_claim():
         "concepts": [],
         "evidence": [],
     }
+
+def test_build_knowledge_graph_provides_claim_trace():
+    claims = [
+        Claim(
+            claim_id="claim-001",
+            text="Self attention improves sequence modeling.",
+            paper_id="paper-001",
+            section="Results",
+        ),
+    ]
+
+    concepts = [
+        Concept(
+            term="self attention",
+            frequency=3,
+            sections=["Results"],
+            contexts=["Self attention improves sequence modeling."],
+            score=5.2,
+        ),
+    ]
+
+    evidence = [
+        Evidence(
+            evidence_id="evidence-001",
+            claim_id="claim-001",
+            text="Accuracy improved by 5 percent.",
+            paper_id="paper-001",
+            evidence_type="supporting",
+        ),
+    ]
+
+    graph = build_knowledge_graph(
+        claims=claims,
+        evidence=evidence,
+        concepts=concepts,
+    )
+
+    trace = graph.get_claim_trace("claim-001")
+
+    assert trace["claim"] == claims[0]
+    assert trace["concepts"] == [concepts[0]]
+    assert trace["evidence"] == [evidence[0]]
