@@ -18,7 +18,8 @@ def format_contradiction_report(
     ):
         lines.append(
             f"{index}. {contradiction.claim_a} "
-            f"vs {contradiction.claim_b}"
+            f"vs {contradiction.claim_b} "
+            f"(confidence={contradiction.confidence:.4f})"
         )
         lines.append(
             f"   Paper A: {contradiction.paper_a}"

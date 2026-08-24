@@ -17,7 +17,9 @@ def detect_contradictions(
                     Contradiction(
                         claim_a=claim_a.claim_id,
                         claim_b=claim_b.claim_id,
-                    )
+                        paper_a=claim_a.paper_id,
+                        paper_b=claim_b.paper_id,
+)
                 )
 
     return contradictions

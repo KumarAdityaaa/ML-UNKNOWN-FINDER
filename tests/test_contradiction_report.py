@@ -19,6 +19,7 @@ def test_format_contradiction_report():
     assert "claim-002" in report
     assert "paper-001" in report
     assert "paper-002" in report
+    assert "confidence=1.0000" in report
 
 def test_format_contradiction_report_empty():
     report = format_contradiction_report([])
