@@ -175,7 +175,7 @@ def main():
             f"{len(concept.sections)} sections"
         )
 
-    paper = PaperRecord(
+        paper = PaperRecord(
         paper_id=PAPER_ID,
         title=TITLE,
         source="arxiv",
@@ -183,6 +183,21 @@ def main():
     )
 
     print(f"      PaperRecord: {paper.paper_id}")
+
+    registry = CorpusRegistry(REGISTRY_PATH)
+    registry.save([paper])
+
+    registered = registry.load()
+
+    print(f"      Registry: {REGISTRY_PATH}")
+    print(f"      Registered papers: {len(registered)}")
+
+    if registered:
+        print(
+            f"      Stored novelty results: "
+            f"{len(registered[0].novelty_results)}"
+        )
+        print(f"      PaperRecord: {paper.paper_id}")
 
     # 4. Record provenance.
     print("\n[4/5] Recording provenance...")
