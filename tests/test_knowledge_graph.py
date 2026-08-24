@@ -137,3 +137,54 @@ def test_knowledge_graph_tracks_claim_concept_relationships():
     graph.link_claim_to_concept(claim.claim_id, concept.term)
 
     assert graph.get_concepts_for_claim("claim-001") == [concept]
+
+def test_knowledge_graph_returns_claim_trace():
+    graph = KnowledgeGraph()
+
+    claim = Claim(
+        claim_id="claim-001",
+        text="Self attention improves sequence modeling.",
+        paper_id="paper-001",
+        section="Results",
+    )
+
+    concept = Concept(
+        term="self attention",
+        frequency=3,
+        sections=["Results"],
+        contexts=["Self attention improves sequence modeling."],
+        score=5.2,
+    )
+
+    evidence = Evidence(
+        evidence_id="evidence-001",
+        claim_id="claim-001",
+        text="Accuracy improved by 5 percent.",
+        paper_id="paper-001",
+        evidence_type="supporting",
+    )
+
+    graph.add_claim(claim)
+    graph.add_concept(concept)
+    graph.add_evidence(evidence)
+    graph.link_claim_to_concept(
+        "claim-001",
+        "self attention",
+    )
+
+    trace = graph.get_claim_trace("claim-001")
+
+    assert trace["claim"] == claim
+    assert trace["concepts"] == [concept]
+    assert trace["evidence"] == [evidence]
+
+def test_knowledge_graph_returns_empty_trace_for_unknown_claim():
+    graph = KnowledgeGraph()
+
+    trace = graph.get_claim_trace("missing-claim")
+
+    assert trace == {
+        "claim": None,
+        "concepts": [],
+        "evidence": [],
+    }

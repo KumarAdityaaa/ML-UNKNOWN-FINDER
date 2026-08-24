@@ -84,3 +84,22 @@ class KnowledgeGraph:
             self.concepts[term]
             for term in self.claim_concepts.get(claim_id, [])
         ]
+
+    def get_claim_trace(
+        self,
+        claim_id: str,
+    ) -> dict:
+        claim = self.claims.get(claim_id)
+
+        if claim is None:
+            return {
+                "claim": None,
+                "concepts": [],
+                "evidence": [],
+            }
+
+        return {
+            "claim": claim,
+            "concepts": self.get_concepts_for_claim(claim_id),
+            "evidence": self.get_evidence_for_claim(claim_id),
+        }
