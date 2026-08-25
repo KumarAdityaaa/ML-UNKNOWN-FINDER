@@ -1,6 +1,6 @@
 from unknown_finder.hypothesis.models import Hypothesis
 from unknown_finder.hypothesis.service import HypothesisService
-
+from unknown_finder.gaps.models import Gap
 
 def test_hypothesis_service_generates_hypotheses():
     service = HypothesisService()
@@ -87,3 +87,39 @@ def test_hypothesis_service_preserves_evidence_ids():
 
     assert "evidence-001" in report
     assert "evidence-002" in report
+
+def test_hypothesis_service_generates_from_gaps():
+    service = HypothesisService()
+
+    hypotheses = service.generate(
+        [
+            Gap(
+                concept_a="attention",
+                concept_b="medical imaging",
+                confidence=0.75,
+            ),
+        ]
+    )
+
+    assert len(hypotheses) == 1
+    assert hypotheses[0].concept_a == "attention"
+    assert hypotheses[0].concept_b == "medical imaging"
+    assert hypotheses[0].confidence == 0.75
+
+def test_hypothesis_service_reports_gap_with_confidence_and_evidence():
+    service = HypothesisService()
+
+    report = service.report(
+        [
+            Gap(
+                concept_a="attention",
+                concept_b="medical imaging",
+                confidence=0.75,
+            ),
+        ]
+    )
+
+    assert "attention" in report
+    assert "medical imaging" in report
+    assert "confidence=0.7500" in report
+    assert "Evidence: none" in report

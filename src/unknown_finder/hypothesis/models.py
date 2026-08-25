@@ -6,6 +6,7 @@ class Hypothesis:
     concept_a: str
     concept_b: str
     evidence_ids: list[str] = field(default_factory=list)
+    confidence: float = 1.0
 
     def __post_init__(self) -> None:
         if not self.concept_a.strip():

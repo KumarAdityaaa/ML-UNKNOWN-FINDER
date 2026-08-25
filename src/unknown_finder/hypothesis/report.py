@@ -22,9 +22,9 @@ def format_hypothesis_report(
     ):
         lines.append(
             f"{index}. {hypothesis.concept_a} "
-            f"<-> {hypothesis.concept_b}"
+            f"<-> {hypothesis.concept_b} "
+            f"(confidence={hypothesis.confidence:.4f})"
         )
-
         if hypothesis.evidence_ids:
             lines.append(
                 "   Evidence: "
