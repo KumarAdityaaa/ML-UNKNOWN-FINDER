@@ -1,6 +1,7 @@
 from unknown_finder.hypothesis.generator import generate_hypotheses
 from unknown_finder.hypothesis.models import Hypothesis
 import pytest
+from unknown_finder.gaps.models import Gap
 
 def test_generate_hypothesis_from_gap():
     hypotheses = generate_hypotheses(
@@ -96,7 +97,6 @@ def test_hypothesis_rejects_empty_evidence_id():
         )
 
 def test_hypothesis_rejects_duplicate_evidence_ids():
-    import pytest
 
     with pytest.raises(ValueError):
         Hypothesis(
@@ -107,3 +107,21 @@ def test_hypothesis_rejects_duplicate_evidence_ids():
                 "evidence-001",
             ],
         )
+
+def test_generate_hypotheses_from_gaps():
+    gaps = [
+        Gap(
+            concept_a="attention",
+            concept_b="medical imaging",
+        ),
+    ]
+
+    hypotheses = generate_hypotheses(gaps)
+
+    assert len(hypotheses) == 1
+
+    hypothesis = hypotheses[0]
+
+    assert hypothesis.concept_a == "attention"
+    assert hypothesis.concept_b == "medical imaging"
+    assert hypothesis.evidence_ids == []
