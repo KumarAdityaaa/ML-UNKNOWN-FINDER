@@ -98,3 +98,14 @@ def test_gap_accepts_confidence_boundaries():
 
     assert gap_zero.confidence == 0.0
     assert gap_one.confidence == 1.0
+
+def test_detect_gaps_keeps_highest_confidence_for_duplicate_pair():
+    gaps = detect_gaps(
+        [
+            ("attention", "medical imaging", 0.4),
+            ("medical imaging", "attention", 0.9),
+        ]
+    )
+
+    assert len(gaps) == 1
+    assert gaps[0].confidence == 0.9

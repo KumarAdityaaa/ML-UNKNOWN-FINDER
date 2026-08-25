@@ -2,26 +2,31 @@ from unknown_finder.gaps.models import Gap
 
 
 def detect_gaps(
-    concept_pairs: list[tuple[str, str]],
+    concept_pairs: list[
+        tuple[str, str] | tuple[str, str, float]
+    ],
 ) -> list[Gap]:
-    gaps: list[Gap] = []
-    seen: set[frozenset[str]] = set()
+    gaps_by_pair: dict[frozenset[str], Gap] = {}
 
-    for concept_a, concept_b in concept_pairs:
+    for item in concept_pairs:
+        concept_a = item[0]
+        concept_b = item[1]
+        confidence = item[2] if len(item) == 3 else 1.0
+
         if concept_a == concept_b:
             continue
+
         pair = frozenset((concept_a, concept_b))
 
-        if pair in seen:
-            continue
-
-        seen.add(pair)
-
-        gaps.append(
-            Gap(
-                concept_a=concept_a,
-                concept_b=concept_b,
-            )
+        candidate = Gap(
+            concept_a=concept_a,
+            concept_b=concept_b,
+            confidence=confidence,
         )
 
-    return gaps
+        existing = gaps_by_pair.get(pair)
+
+        if existing is None or candidate.confidence > existing.confidence:
+            gaps_by_pair[pair] = candidate
+
+    return list(gaps_by_pair.values())
