@@ -38,23 +38,9 @@ def build_knowledge_graph(
             concept_term,
         )
 
-    for concept in concepts or []:
-        graph.add_concept(concept)
-
-    links = link_claims_to_concepts(
-        claims,
-        concepts or [],
-    )
-
-    for claim_id, concept_term in links:
-        graph.link_claim_to_concept(
-            claim_id,
-            concept_term,
-        )
-
     contradictions = detect_contradictions(claims)
 
     for contradiction in contradictions:
         graph.add_contradiction(contradiction)
-        
+
     return graph

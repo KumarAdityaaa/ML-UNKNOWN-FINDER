@@ -2,6 +2,8 @@ from unknown_finder.evidence.models import Claim, Evidence
 from unknown_finder.knowledge_graph.models import KnowledgeGraph
 from unknown_finder.extraction.concepts import Concept
 from unknown_finder.knowledge_graph.builder import build_knowledge_graph
+from unknown_finder.contradiction.models import Contradiction
+import pytest
 
 def test_knowledge_graph_adds_claim_and_evidence():
     graph = KnowledgeGraph()
@@ -231,3 +233,104 @@ def test_build_knowledge_graph_provides_claim_trace():
     assert trace["claim"] == claims[0]
     assert trace["concepts"] == [concepts[0]]
     assert trace["evidence"] == [evidence[0]]
+
+def test_knowledge_graph_tracks_contradictions():
+    graph = KnowledgeGraph()
+
+    claim_a = Claim(
+        claim_id="claim-001",
+        text="The proposed method improves accuracy.",
+        paper_id="paper-001",
+        section="Results",
+    )
+
+    claim_b = Claim(
+        claim_id="claim-002",
+        text="The proposed method does not improve accuracy.",
+        paper_id="paper-002",
+        section="Results",
+    )
+
+    graph.add_claim(claim_a)
+    graph.add_claim(claim_b)
+
+    contradiction = Contradiction(
+        claim_a="claim-001",
+        claim_b="claim-002",
+        paper_a="paper-001",
+        paper_b="paper-002",
+    )
+
+    graph.add_contradiction(contradiction)
+
+    assert graph.get_contradictions_for_claim("claim-001") == [
+        contradiction
+    ]
+    assert graph.get_contradictions_for_claim("claim-002") == [
+        contradiction
+    ]
+
+def test_knowledge_graph_rejects_contradiction_with_unknown_claim():
+
+    graph = KnowledgeGraph()
+
+    claim = Claim(
+        claim_id="claim-001",
+        text="The proposed method improves accuracy.",
+        paper_id="paper-001",
+        section="Results",
+    )
+
+    graph.add_claim(claim)
+
+    contradiction = Contradiction(
+        claim_a="claim-001",
+        claim_b="missing-claim",
+        paper_a="paper-001",
+        paper_b="paper-002",
+    )
+
+    with pytest.raises(ValueError, match="Unknown claim"):
+        graph.add_contradiction(contradiction)
+
+def test_knowledge_graph_does_not_duplicate_contradictions():
+    graph = KnowledgeGraph()
+
+    claim_a = Claim(
+        claim_id="claim-001",
+        text="The proposed method improves accuracy.",
+        paper_id="paper-001",
+        section="Results",
+    )
+
+    claim_b = Claim(
+        claim_id="claim-002",
+        text="The proposed method does not improve accuracy.",
+        paper_id="paper-002",
+        section="Results",
+    )
+
+    graph.add_claim(claim_a)
+    graph.add_claim(claim_b)
+
+    contradiction = Contradiction(
+        claim_a="claim-001",
+        claim_b="claim-002",
+        paper_a="paper-001",
+        paper_b="paper-002",
+    )
+
+    graph.add_contradiction(contradiction)
+    graph.add_contradiction(contradiction)
+
+    assert graph.get_contradictions_for_claim("claim-001") == [
+        contradiction
+    ]
+    assert graph.get_contradictions_for_claim("claim-002") == [
+        contradiction
+    ]
+
+def test_knowledge_graph_returns_empty_for_unknown_contradiction_claim():
+    graph = KnowledgeGraph()
+
+    assert graph.get_contradictions_for_claim("missing-claim") == []

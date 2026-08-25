@@ -1,5 +1,7 @@
 from unknown_finder.ingestion.corpus import LiteratureCorpus
 from unknown_finder.ingestion.models import PaperRecord
+from unknown_finder.contradiction.report import format_contradiction_report
+from unknown_finder.knowledge_graph.builder import build_knowledge_graph
 
 
 class FakeService:
