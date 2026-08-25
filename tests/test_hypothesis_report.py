@@ -57,6 +57,7 @@ def test_format_hypothesis_report_limit():
             concept_a="attention",
             concept_b="medical imaging",
             evidence_ids=["evidence-001"],
+            confidence=0.85,
         ),
         Hypothesis(
             concept_a="transformer",
@@ -74,3 +75,4 @@ def test_format_hypothesis_report_limit():
     assert "medical imaging" in report
     assert "transformer" not in report
     assert "genomics" not in report
+    assert "confidence=0.8500" in report

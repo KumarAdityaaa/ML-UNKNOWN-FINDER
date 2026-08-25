@@ -15,17 +15,20 @@ def generate_hypotheses(
         if isinstance(item, Gap):
             concept_a = item.concept_a
             concept_b = item.concept_b
+            confidence = item.confidence
         else:
             concept_a = item[0]
             concept_b = item[1]
+            confidence = 1.0
 
         evidence_ids = item[2] if not isinstance(item, Gap) and len(item) == 3 else []
 
         hypotheses.append(
-            Hypothesis(
-                concept_a=concept_a,
-                concept_b=concept_b,
-                evidence_ids=evidence_ids,
+        Hypothesis(
+            concept_a=concept_a,
+            concept_b=concept_b,
+            evidence_ids=evidence_ids,
+            confidence=confidence,
             )
         )
 

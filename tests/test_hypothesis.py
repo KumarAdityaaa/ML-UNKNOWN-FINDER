@@ -125,3 +125,17 @@ def test_generate_hypotheses_from_gaps():
     assert hypothesis.concept_a == "attention"
     assert hypothesis.concept_b == "medical imaging"
     assert hypothesis.evidence_ids == []
+
+def test_generate_hypothesis_preserves_gap_confidence():
+    gaps = [
+        Gap(
+            concept_a="attention",
+            concept_b="medical imaging",
+            confidence=0.75,
+        ),
+    ]
+
+    hypotheses = generate_hypotheses(gaps)
+
+    assert len(hypotheses) == 1
+    assert hypotheses[0].confidence == 0.75
