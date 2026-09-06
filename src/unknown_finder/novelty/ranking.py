@@ -10,6 +10,7 @@ class RankedUnknown:
     reason: str
     paper_id: str
     paper_title: str
+    source_paper_ids: list[str]
 
 
 def rank_unknowns(
@@ -21,19 +22,25 @@ def rank_unknowns(
         for result in paper.novelty_results:
             existing = best_results.get(result.term)
 
-            ranked = RankedUnknown(
+            if existing is not None:
+                if paper.paper_id not in existing.source_paper_ids:
+                    existing.source_paper_ids.append(paper.paper_id)
+
+                if result.novelty_score <= existing.novelty_score:
+                    continue
+
+            best_results[result.term] = RankedUnknown(
                 term=result.term,
                 novelty_score=result.novelty_score,
                 reason=result.reason,
                 paper_id=paper.paper_id,
                 paper_title=paper.title,
+                source_paper_ids=(
+                    existing.source_paper_ids
+                    if existing is not None
+                    else [paper.paper_id]
+                ),
             )
-
-            if (
-                existing is None
-                or ranked.novelty_score > existing.novelty_score
-            ):
-                best_results[result.term] = ranked
 
     results = list(best_results.values())
 
