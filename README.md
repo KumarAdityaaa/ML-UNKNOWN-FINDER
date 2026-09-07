@@ -4,11 +4,11 @@
 
 **## Project Status**
 
-**\*\*Current Phase:\*\*** Literature Ingestion  
+**\*\*Current Phase:\*\*** Phase 4 - Discovery Engine  
 
-**\*\*Current Milestone:\*\*** Literature Ingestion Foundation  
+**\*\*Current Milestone:\*\*** Discovery Engine Foundation Complete  
 
-**\*\*Status:\*\*** In active development  
+**\*\*Status:\*\*** Phase 4 complete; Phase 6 evaluation work in progress  
 
 **\*\*Primary branch:\*\*** \`main\`
 
