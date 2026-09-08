@@ -139,3 +139,15 @@ def test_generate_hypothesis_preserves_gap_confidence():
 
     assert len(hypotheses) == 1
     assert hypotheses[0].confidence == 0.75
+def test_hypothesis_accepts_generated_text():
+    hypothesis = Hypothesis(
+        concept_a="attention",
+        concept_b="medical imaging",
+        generated_text=(
+            "Attention mechanisms improve medical image analysis."
+        ),
+    )
+
+    assert hypothesis.generated_text == (
+        "Attention mechanisms improve medical image analysis."
+    )
