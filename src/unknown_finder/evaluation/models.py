@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -12,3 +12,12 @@ class EvaluationCase:
     input_text: str
     expected: str
     actual: str | None = None
+
+
+@dataclass(frozen=True)
+class EvaluationDataset:
+    cases: list[EvaluationCase] = field(default_factory=list)
+
+    @property
+    def size(self) -> int:
+        return len(self.cases)
