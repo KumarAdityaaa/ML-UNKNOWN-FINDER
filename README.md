@@ -442,9 +442,9 @@ Implement:
 
 \- missing experiment detection.
 
-**### Phase 5 — Hypothesis Engine**
+**### Phase 5 - Hypothesis Engine**
 
-Generate and rank candidate hypotheses with explicit evidence traces.
+**Status: Complete**
 
 **### Phase 6 — Evaluation**
 
