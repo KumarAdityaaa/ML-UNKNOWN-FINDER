@@ -28,3 +28,7 @@ class HypothesisEvaluation:
     relevance: float
     testability: float
     novelty: float
+
+    @property
+    def quality_score(self) -> float:
+        return (self.relevance + self.testability + self.novelty) / 3
