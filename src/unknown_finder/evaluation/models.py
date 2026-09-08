@@ -21,3 +21,10 @@ class EvaluationDataset:
     @property
     def size(self) -> int:
         return len(self.cases)
+
+@dataclass(frozen=True)
+class HypothesisEvaluation:
+    hypothesis: str
+    relevance: float
+    testability: float
+    novelty: float
