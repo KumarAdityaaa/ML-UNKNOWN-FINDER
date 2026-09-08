@@ -60,3 +60,21 @@ def f1_score(
         return 0.0
 
     return 2 * precision * recall / total
+
+def accuracy(
+    true_positives: int,
+    true_negatives: int,
+    false_positives: int,
+    false_negatives: int,
+) -> float:
+    total = (
+        true_positives
+        + true_negatives
+        + false_positives
+        + false_negatives
+    )
+
+    if total == 0:
+        return 0.0
+
+    return (true_positives + true_negatives) / total
