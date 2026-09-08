@@ -44,3 +44,41 @@ def test_generate_hypothesis_uses_ollama_client(monkeypatch):
     assert len(calls) == 1
     assert "attention" in calls[0]
     assert "medical imaging" in calls[0]
+
+from unknown_finder.evaluation.ollama_hypothesis import generate_hypothesis_model
+from unknown_finder.hypothesis.models import Hypothesis
+from unknown_finder.gaps.models import Gap
+
+
+def test_generate_hypothesis_model_returns_hypothesis(monkeypatch):
+    monkeypatch.setattr(
+        "unknown_finder.evaluation.ollama_hypothesis.OllamaClient",
+        lambda: type(
+            "FakeClient",
+            (),
+            {
+                "generate": lambda self, prompt:
+                "Attention mechanisms improve medical image analysis."
+            },
+        )(),
+    )
+
+    gap = Gap(
+        concept_a="attention",
+        concept_b="medical imaging",
+        confidence=0.8,
+    )
+
+    result = generate_hypothesis_model(
+        gap,
+        evidence_ids=["evidence-001"],
+    )
+
+    assert isinstance(result, Hypothesis)
+    assert result.concept_a == "attention"
+    assert result.concept_b == "medical imaging"
+    assert result.confidence == 0.8
+    assert result.evidence_ids == ["evidence-001"]
+    assert result.generated_text == (
+        "Attention mechanisms improve medical image analysis."
+    )

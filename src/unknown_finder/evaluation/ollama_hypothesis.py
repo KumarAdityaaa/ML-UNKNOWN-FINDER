@@ -16,3 +16,20 @@ def generate_hypothesis(gap: Gap) -> str:
     client = OllamaClient()
     prompt = build_hypothesis_prompt(gap)
     return client.generate(prompt)
+
+from unknown_finder.hypothesis.models import Hypothesis
+
+
+def generate_hypothesis_model(
+    gap: Gap,
+    evidence_ids: list[str] | None = None,
+) -> Hypothesis:
+    generated_text = generate_hypothesis(gap)
+
+    return Hypothesis(
+        concept_a=gap.concept_a,
+        concept_b=gap.concept_b,
+        evidence_ids=evidence_ids or [],
+        confidence=gap.confidence,
+        generated_text=generated_text,
+    )
