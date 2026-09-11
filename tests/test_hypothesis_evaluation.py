@@ -15,3 +15,23 @@ def test_hypothesis_evaluation_stores_labels():
     assert evaluation.relevance == 1.0
     assert evaluation.testability == 0.8
     assert evaluation.novelty == 0.6
+
+import pytest
+
+
+def test_hypothesis_evaluation_rejects_invalid_scores():
+    with pytest.raises(ValueError):
+        HypothesisEvaluation(
+            hypothesis="Attention improves medical imaging.",
+            relevance=1.1,
+            testability=0.8,
+            novelty=0.6,
+        )
+
+    with pytest.raises(ValueError):
+        HypothesisEvaluation(
+            hypothesis="Attention improves medical imaging.",
+            relevance=1.0,
+            testability=-0.1,
+            novelty=0.6,
+        )
