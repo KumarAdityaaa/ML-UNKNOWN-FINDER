@@ -1,5 +1,6 @@
-from unknown_finder.evaluation.ollama_hypothesis import build_hypothesis_prompt
+from unknown_finder.evaluation.ollama_hypothesis import build_hypothesis_prompt, generate_hypothesis, generate_hypothesis_model
 from unknown_finder.gaps.models import Gap
+from unknown_finder.hypothesis.models import Hypothesis
 
 
 def test_build_hypothesis_prompt_includes_gap_concepts():
@@ -16,8 +17,6 @@ def test_build_hypothesis_prompt_includes_gap_concepts():
     assert "0.8" in prompt
     assert "testable hypothesis" in prompt.lower()
 
-from unknown_finder.evaluation.ollama_hypothesis import generate_hypothesis
-from unknown_finder.gaps.models import Gap
 
 
 def test_generate_hypothesis_uses_ollama_client(monkeypatch):
@@ -45,9 +44,6 @@ def test_generate_hypothesis_uses_ollama_client(monkeypatch):
     assert "attention" in calls[0]
     assert "medical imaging" in calls[0]
 
-from unknown_finder.evaluation.ollama_hypothesis import generate_hypothesis_model
-from unknown_finder.hypothesis.models import Hypothesis
-from unknown_finder.gaps.models import Gap
 
 
 def test_generate_hypothesis_model_returns_hypothesis(monkeypatch):
