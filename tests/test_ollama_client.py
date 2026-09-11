@@ -33,3 +33,12 @@ def test_ollama_client_generate_calls_ollama(monkeypatch):
 
     assert result == "A research gap is an unexplored area."
     assert len(calls) == 1
+
+import pytest
+
+
+def test_ollama_client_rejects_empty_prompt():
+    client = OllamaClient(model="qwen2.5:7b")
+
+    with pytest.raises(ValueError):
+        client.generate("")
