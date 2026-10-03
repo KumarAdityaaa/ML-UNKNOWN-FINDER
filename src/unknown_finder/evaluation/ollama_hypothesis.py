@@ -33,3 +33,19 @@ def generate_hypothesis_model(
         confidence=gap.confidence,
         generated_text=generated_text,
     )
+
+def generate_hypotheses(gap: Gap) -> list[str]:
+    client = OllamaClient()
+    prompt = (
+        f"Given a research gap between '{gap.concept_a}' and "
+        f"'{gap.concept_b}', return exactly 3 numbered testable hypotheses."
+    )
+    response = client.generate(prompt)
+
+    hypotheses = []
+    for line in response.splitlines():
+        line = line.strip()
+        if len(line) >= 3 and line[0].isdigit() and line[1] == ".":
+            hypotheses.append(line[2:].strip())
+
+    return hypotheses
